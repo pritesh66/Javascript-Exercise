@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Bare - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jquery.tagsinput.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            padding-top: 70px;
+            /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+        }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!-- jQuery Version 1.11.1 -->
+    <script src="js/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+
+    <![endif]-->
+
+    <script type="text/javascript" src="./js/jquery.tagsinput.js"></script>
+
+</head>
+
+<body>
+
+<!-- Page Content -->
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h1>Javascript Test</h1>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div id="input">
+        <div class="form-group">
+            <label for="inputlg" >Term:</label>
+            <input class="form-control input-lg" id="inputlg" type="text"  maxlength="50" >
+        </div>
+
+        <label for="inputlg">Type:</label>
+        <select id="type" class="form-control" small>
+            <option value="invalid" selected disabled>Choose a Type</option>
+            <option value="pos">Positive</option>
+            <option value="neg">Negative</option>
+        </select>
+        <br>
+        <input class="btn btn-primary" type="button" value="Add Term" onclick="addItems();">
+
+    </div>
+    <div id="output">
+        <label id="pos">Positive:</label>
+        <textarea id="outputPos" name="Text1" cols="40" rows="5"></textarea>
+
+        <label id="neg">Negative:</label>
+        <input id="outputNeg" type="text">
+    </div>
+</div>
+<!-- /.container -->
+
+
+
+</body>
+
+<script>
+
+    //Setting jquery plugin for tags
+
+    $("#outputPos").tagsInput({
+        maxChars : 50
+    });
+    $("#outputNeg").tagsInput({
+        maxChars : 50
+    });
+
+
+    var temp = 1;
+    var arrPos = [],tempArrPos=[],arrNeg = [],tempArrNeg=[],j;
+
+
+    /*Function to add Items in negative and Positive Boxes*/
+
+    function addItems() {
+
+        var inputVal = document.getElementById("inputlg");
+        var type = document.getElementById("type");
+
+        // Check conditions according to type
+
+        if (inputVal.value == "") {
+            alert("Enter the term in textbox");
+        }
+        else if (type.value == "invalid") {
+            alert("Choose the valid type");
+        }
+        else if (type.value == "pos") {
+
+            tempArrPos = arrPos;                 // copying previous elements in an temp array for removing all positive tags
+            arrPos.push(inputVal.value);
+            arrPos.sort();                       //sorts tags alphabetically
+
+            //removing all previous positive tags
+
+            for(j=0;j<tempArrPos.length;j++) {
+                $("#outputPos").removeTag(tempArrPos[j]);
+            }
+
+            //adding array of sorted tags with all previous and current positive tag
+
+            for(j=0;j<arrPos.length;j++) {
+                $("#outputPos").addTag(arrPos[j]);
+            }
+
+            temp++;
+
+        } else {
+
+            tempArrNeg = arrNeg;                // copying previous elements in an temp array for removing all negative tags
+            arrNeg.push(inputVal.value);
+            arrNeg.sort();                     //sorts tags alphabetically
+
+
+
+
+
+            //removing all previous negative tags
+
+            for( j=0;j<tempArrNeg.length;j++) {
+                console.log(tempArrNeg[j]);
+                $("#outputNeg").removeTag(tempArrNeg[j]);
+            }
+
+           //adding array of sorted tags with all previous and current negative tag
+
+            for(j=0;j<arrNeg.length;j++) {
+                console.log(arrNeg[j]);
+                $("#outputNeg").addTag(arrNeg[j]);
+            }
+
+            temp++;
+
+        }
+
+        //reset values for text box and type
+
+        inputVal.value = "";
+        type.value = "invalid";
+
+
+
+        var el = document.getElementsByTagName('span');
+
+        /* Function to set EventListener for all tags */
+
+        function getVal() {
+            console.log("here");
+            var el = this;
+
+            inputVal.value = el.innerHTML;
+
+            while(el=el.parentNode){
+                if(el.id == "outputPos_tagsinput") {
+                    type.value = "pos";
+                }
+                if(el.id == "outputNeg_tagsinput") {
+                    type.value = "neg";
+                }
+            }
+        }
+
+        //setting eventlistener for all tags according to ids.
+
+        for (var i = 1; i < el.length; i=i+2) {
+            el[i].addEventListener('click', getVal ,false);
+        }
+
+    }
+
+
+</script>
+</html>
